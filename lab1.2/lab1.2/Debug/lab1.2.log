@@ -1,0 +1,15 @@
+﻿  Source.cpp
+C:\Users\Иван\source\repos\lab1.2\lab1.2\Source.cpp(41,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Иван\source\repos\lab1.2\lab1.2\Source.cpp(44,19): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Иван\source\repos\lab1.2\lab1.2\Source.cpp(44,15): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Иван\source\repos\lab1.2\lab1.2\Source.cpp(47,20): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+C:\Users\Иван\source\repos\lab1.2\lab1.2\Source.cpp(48,23): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+  lab1.2.vcxproj -> C:\Users\Иван\source\repos\lab1.2\Debug\lab1.2.exe
