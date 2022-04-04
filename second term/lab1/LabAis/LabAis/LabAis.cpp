@@ -12,7 +12,7 @@ int main()
     vector<vector<Rationalnumber>> NewMatrix;
     vector<vector<Rationalnumber>> InversMatrix;
     vector<vector<Rationalnumber>> E;
-    NewMatrix = generateMatrix(3,1,5,1,5);
+    NewMatrix = generateMatrix(2,1,5,1,5);
     cout << "Matrix:" << endl;
     cout << endl;
     printMatrix(NewMatrix);
@@ -29,5 +29,9 @@ int main()
     cout << endl;
     E = multipMatrix(NewMatrix, InversMatrix);
     printMatrix(E);
+    cout << endl;
+    Rationalnumber norma;
+    norma = NormaFroben(InversMatrix);
+    cout << "Norma Frobeniusa = " << norma.m/norma.n << endl;
 }
 

@@ -216,3 +216,17 @@ Rationalnumber Determinant(vector<vector<Rationalnumber>> A, int n) {
     return d;
 
 }
+
+Rationalnumber NormaFroben(vector<vector<Rationalnumber>> A) {
+    Rationalnumber a;
+    a.m = 0;
+    a.n = 1;
+    for (int i = 0; i < A.size(); i++) {
+        for (int j = 0; j < A.size(); j++) {
+            Rationalnumber b = A[i][j].multip(A[i][j]);
+            a.sum(b);
+        }
+    }
+
+    return a;
+}
