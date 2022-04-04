@@ -1,0 +1,4 @@
+﻿  LabAis.cpp
+D:\ooop\second term\lab1\LabAis\LabAis\Rationalnumber.h(20,20): warning C4244: =: преобразование "double" в "__int64", возможна потеря данных
+D:\ooop\second term\lab1\LabAis\LabAis\Rationalnumber.h(21,20): warning C4244: =: преобразование "double" в "__int64", возможна потеря данных
+  LabAis.vcxproj -> D:\ooop\second term\lab1\LabAis\Debug\LabAis.exe
