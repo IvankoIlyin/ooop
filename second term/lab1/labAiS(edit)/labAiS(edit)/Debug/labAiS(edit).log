@@ -1,0 +1,4 @@
+﻿  labAiS(edit).cpp
+C:\Users\Иван\source\repos\labAiS(edit)\labAiS(edit)\labAiS(edit).cpp(21,21): warning C4244: =: преобразование "double" в "__int64", возможна потеря данных
+C:\Users\Иван\source\repos\labAiS(edit)\labAiS(edit)\labAiS(edit).cpp(22,21): warning C4244: =: преобразование "double" в "__int64", возможна потеря данных
+  labAiS(edit).vcxproj -> C:\Users\Иван\source\repos\labAiS(edit)\Debug\labAiS(edit).exe
