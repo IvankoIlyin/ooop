@@ -17,9 +17,6 @@ int main()
     cout << endl;
     printMatrix(NewMatrix);
     cout << endl;
-    Rationalnumber D = Determinant(NewMatrix, NewMatrix.size());
-    cout << "deter=" << D.m << "/" << D.n << endl;
-    cout << endl;
     cout << "Inverse Matrix" << endl;
     cout << endl;
     InversMatrix = inversionGaus(NewMatrix);
@@ -29,6 +26,9 @@ int main()
     cout << endl;
     E = multipMatrix(NewMatrix, InversMatrix);
     printMatrix(E);
+    cout << endl;
+    Rationalnumber D = Determinant(InversMatrix, InversMatrix.size());
+    cout << "deter=" << D.m << "/" << D.n << endl;
     cout << endl;
     Rationalnumber norma;
     norma = NormaFroben(InversMatrix);
