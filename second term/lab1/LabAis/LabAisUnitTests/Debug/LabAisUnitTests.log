@@ -1,6 +1,9 @@
 ﻿  LabAisUnitTests.cpp
 D:\ooop\second term\lab1\LabAis\LabAis\Rationalnumber.h(20,20): warning C4244: =: преобразование "double" в "__int64", возможна потеря данных
 D:\ooop\second term\lab1\LabAis\LabAis\Rationalnumber.h(21,20): warning C4244: =: преобразование "double" в "__int64", возможна потеря данных
-D:\ooop\second term\lab1\LabAis\LabAis\Matrix.h(224,23): warning C4018: <: несоответствие типов со знаком и без знака
-D:\ooop\second term\lab1\LabAis\LabAis\Matrix.h(225,27): warning C4018: <: несоответствие типов со знаком и без знака
+D:\ooop\second term\lab1\LabAis\LabAis\Matrix.h(229,27): warning C4018: <: несоответствие типов со знаком и без знака
+D:\ooop\second term\lab1\LabAis\LabAis\Matrix.h(230,31): warning C4018: <: несоответствие типов со знаком и без знака
+D:\ooop\second term\lab1\LabAis\LabAis\Matrix.h(463,23): warning C4018: <: несоответствие типов со знаком и без знака
+D:\ooop\second term\lab1\LabAis\LabAis\Matrix.h(464,27): warning C4018: <: несоответствие типов со знаком и без знака
+     Создается библиотека D:\ooop\second term\lab1\LabAis\Debug\LabAisUnitTests.lib и объект D:\ooop\second term\lab1\LabAis\Debug\LabAisUnitTests.exp
   LabAisUnitTests.vcxproj -> D:\ooop\second term\lab1\LabAis\Debug\LabAisUnitTests.dll

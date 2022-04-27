@@ -9,7 +9,22 @@ using namespace std;
 
 int main()
 {
-    vector<vector<Rationalnumber>> NewMatrix;
+    Matrix NewMatrix;
+    Matrix CopyMatrix;
+    Matrix E;
+    NewMatrix.generateMatrix(2, 1, 5, 1, 5);
+    cout << "Matrix:" << endl;
+    cout << endl;
+    CopyMatrix = NewMatrix;
+    NewMatrix.printMatrix();
+    NewMatrix.inversionGaus();
+    cout << "Inverse Matrix" << endl;
+    cout << endl;
+    NewMatrix.printMatrix();
+    Rationalnumber D = NewMatrix.Determinant();
+    cout << "deter=" << D.m << "/" << D.n << endl;
+    cout << endl;
+    /*vector<vector<Rationalnumber>> NewMatrix;
     vector<vector<Rationalnumber>> InversMatrix;
     vector<vector<Rationalnumber>> E;
     NewMatrix = generateMatrix(2,1,5,1,5);
@@ -33,5 +48,6 @@ int main()
     Rationalnumber norma;
     norma = NormaFroben(InversMatrix);
     cout << "Norma Frobeniusa = " << norma.m/norma.n << endl;
+    */
 }
 

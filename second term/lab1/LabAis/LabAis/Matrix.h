@@ -5,6 +5,245 @@
 #include"Rationalnumber.h"
 using namespace std;
 
+#ifndef Matr
+#define Matr
+class Matrix {
+    vector<vector<Rationalnumber>> matrix;
+
+    int n = matrix.size();
+
+
+public:
+    void printMatrix() {
+        int n = matrix.size();
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j].print();
+                if (j == n - 1) { cout << endl; }
+            }
+        }
+    }
+
+    void generateMatrix(int n, int begM, int endM, int begN, int endN) {
+        for (int i = 0; i < n; i++) {
+            vector<Rationalnumber> row;
+            for (int j = 0; j < n; j++) {
+                Rationalnumber a;
+                row.push_back(a.generate(begM, endM, begN, endN));
+            }
+            matrix.push_back(row);
+        }
+    }
+
+    vector<vector<Rationalnumber>> inversionGaus() {
+
+        int n = matrix.size();
+
+        vector<vector<Rationalnumber>> E;
+        Rationalnumber temp;
+
+        for (int i = 0; i < n; i++) {
+            vector<Rationalnumber> row;
+            for (int j = 0; j < n; j++) {
+                Rationalnumber r;
+                row.push_back(r);
+            }
+            E.push_back(row);
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+            {
+
+                E[i][j].m = 0; E[i][j].n = 1;
+
+                if (i == j)
+                    E[i][j].m = 1; E[i][j].n = 1;
+            }
+        }
+
+
+
+        for (int k = 0; k < n; k++) {
+            temp = matrix[k][k];
+
+            for (int j = 0; j < n; j++) {
+                matrix[k][j].division(temp);
+                E[k][j].division(temp);
+                matrix[k][j].reduct();
+                E[k][j].reduct();
+
+
+            }
+
+            for (int i = k + 1; i < n; i++) {
+                temp = matrix[i][k];
+
+                for (int j = 0; j < n; j++) {
+                    Rationalnumber A1, E1;
+                    A1 = matrix[k][j];
+                    E1 = E[k][j];
+                    A1.multip(temp);
+                    E1.multip(temp);
+                    matrix[i][j].subtract(A1);
+                    E[i][j].subtract(E1);
+                    matrix[i][j].reduct();
+                    E[i][j].reduct();
+
+                }
+            }
+        }
+
+        for (int k = n - 1; k > 0; k--) {
+            for (int i = k - 1; i >= 0; i--) {
+                temp = matrix[i][k];
+
+                for (int j = 0; j < n; j++) {
+                    Rationalnumber A1, E1;
+                    A1 = matrix[k][j];
+                    E1 = E[k][j];
+                    A1.multip(temp);
+                    E1.multip(temp);
+                    matrix[i][j].subtract(A1);
+                    E[i][j].subtract(E1);
+                    matrix[i][j].reduct();
+                    E[i][j].reduct();
+
+
+                }
+            }
+        }
+
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = E[i][j];
+            }
+        }
+
+        return matrix;
+    }
+
+    vector<vector<Rationalnumber>> multipMatrix( Matrix B) {
+        int n = matrix.size();
+        vector<vector<Rationalnumber>> C;
+        for (int i = 0; i < n; i++) {
+            vector<Rationalnumber> row;
+            for (int j = 0; j < n; j++) {
+                Rationalnumber r;
+                row.push_back(r);
+            }
+            C.push_back(row);
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                C[i][j].m = 0;
+                C[i][j].n = 1;
+                for (int k = 0; k < n; k++) {
+                    C[i][j].sum(matrix[i][k].multip(B.matrix[k][j]));
+
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                C[i][j].reduct();
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (C[i][j].m == C[i][j].n) {
+                    C[i][j].m = 1; C[i][j].n = 1;
+                }
+                if (C[i][j].m == 0) {
+                    C[i][j].m = 0; C[i][j].n = 1;
+                }
+            }
+        }
+
+        return C;
+    }
+
+    void minorMatrix(vector<vector<Rationalnumber>> A, vector<vector<Rationalnumber>> P, int i, int j, int n)
+    {
+        int ki, kj, di, dj;
+        di = 0;
+        for (ki = 0; ki < n - 1; ki++) {
+            if (ki == i) di = 1;
+            dj = 0;
+            for (kj = 0; kj < n - 1; kj++) {
+                if (kj == j) dj = 1;
+                P[ki][kj] = A[ki + di][kj + dj];
+            }
+        }
+    }
+
+    Rationalnumber Determinant() {
+        vector<vector<Rationalnumber>> P;
+        for (int i = 0; i < n; i++) {
+            vector<Rationalnumber> row;
+            for (int j = 0; j < n; j++) {
+                Rationalnumber r;
+                row.push_back(r);
+            }
+            P.push_back(row);
+        }
+        int i, j, m;
+        Rationalnumber d, k;
+        j = 0;
+        k.m = 1; k.n = 1;
+        d.m = 0; d.n = 1;
+        m = n - 1;
+        if (n < 1) { cout << "determinant is not exist" << endl; }
+        if (n == 1) { d = matrix[0][0]; return d; }
+        if (n == 2) {
+            Rationalnumber A1, A2;
+            A1 = matrix[0][0]; A1.multip(matrix[1][1]);
+            A2 = matrix[1][0]; A2.multip(matrix[0][1]);
+            d = A1.subtract(A2);
+            return d;
+        }
+        if (n > 2) {
+            for (i = 0; i < n; i++) {
+                minorMatrix(matrix, P, i, 0, n);
+                Rationalnumber k1 = k;
+                k1.multip(matrix[i][0]);
+                k1.multip(Determinant());
+                d.sum(k1);
+                k.m = k.m * -1;
+                k.n = k.n * -1;
+            }
+        }
+        return d;
+
+    }
+
+    Rationalnumber NormaFroben() {
+        Rationalnumber a;
+        a.m = 0;
+        a.n = 1;
+        for (int i = 0; i < matrix.size(); i++) {
+            for (int j = 0; j < matrix.size(); j++) {
+                Rationalnumber b = matrix[i][j].multip(matrix[i][j]);
+                a.sum(b);
+            }
+        }
+
+        return a;
+    }
+
+};
+
+
+
+
+#endif // !Matr
+
+
 void printMatrix(vector<vector<Rationalnumber>> Matrix) {
     int n = Matrix.size();
     for (int i = 0; i < n; i++)
