@@ -11,6 +11,7 @@ int main()
 {
     Matrix NewMatrix;
     Matrix CopyMatrix;
+    Matrix inverse;
     Matrix E;
     NewMatrix.generateMatrix(2, 1, 5, 1, 5);
     cout << "Matrix:" << endl;
