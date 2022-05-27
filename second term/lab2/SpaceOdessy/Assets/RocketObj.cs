@@ -7,24 +7,34 @@ using System;
     public class RocketObj : MonoBehaviour
 
     {
+        public MainRocketModule mainModule;
         public Rigidbody2D raketa;
         public float thrust;
         public float angle = 0;
         public bool PositiononOrbit = false;
         
-
+        public void construct( float _thrust)
+    {
+        mainModule = new MainRocketModule(raketa, 200f,_thrust , 1f, true, PositiononOrbit);
+        Debug.Log(mainModule.thrust);
+    }
         private void intoOrbit()
+        {
+        if (mainModule.canFly == true)
         {
             raketa.AddForce(transform.up * thrust);
             thrust += 0.1f;
         }
+        }
 
         private void toOrbit()
+        {
+        if (mainModule.canFly == true)
         {
             raketa.rotation += 1f;
             float angel = raketa.rotation * Mathf.Deg2Rad;
             raketa.AddForce(new Vector2(-thrust * Mathf.Sin(angel), thrust * Mathf.Cos(angel)), ForceMode2D.Force);
-
+        }
 
         }
 
@@ -36,7 +46,7 @@ using System;
             var x = Mathf.Cos(angle * 1f) * radius;
             var y = Mathf.Sin(angle * 1f) * radius;
             raketa.AddForce(transform.position = new Vector2(x, y));
-            // raketa.rotation += (2 * Mathf.PI * radius * 0.2f) / Mathf.Sqrt(x * x + y * y);
+            raketa.rotation += (2 * Mathf.PI * radius * 0.2f) / Mathf.Sqrt(x * x + y * y);
 
         }
 
@@ -45,8 +55,15 @@ using System;
         {
 
             float currentRadius = Mathf.Sqrt((raketa.position.x * raketa.position.x) + (raketa.position.y * raketa.position.y));
-            Debug.Log(currentRadius);
-            if (currentRadius <= radius / 2f && PositiononOrbit == false)
+            mainModule.ModuleLife();
+           // Debug.Log(mainModule.fuel);
+             raketa.mass = mainModule.massOfModule;
+ 
+        if (mainModule.canFly == false)
+        {
+            thrust = 0f;
+        }
+        if (currentRadius <= radius / 2f && PositiononOrbit == false)
             {
                 intoOrbit();
             }
@@ -66,11 +83,10 @@ using System;
 
             if (PositiononOrbit == true)
             {
-                PositiononOrbit = true;
                 onOrbit(radius);
             }
 
-
+        
         }
 
 
@@ -81,10 +97,6 @@ using System;
     MainRocketModule MainModule;
     SimpleRocketModule moduleOne, moduleTwo, moduleThrie;
 
-    public void CreateMainModules()
-    {
-
-    }
 }
 
     public interface ModuleBehavior
@@ -157,7 +169,7 @@ using System;
     private float fuel;
     private float thrust;
     private float massOfModule;
-    private bool canFly;
+    private bool canFly=true;
     private bool PositiononOrbit;
 
     public MainModuleBehavior(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _canFly, bool _PositiononOrbit)
@@ -172,9 +184,11 @@ using System;
 
     public void checkForSegregation()
     {
-        if (fuel == 0 && PositiononOrbit == false)
+        if (fuel == 0 || PositiononOrbit == false)
         {
             canFly = false;
+          //  Debug.Log(canFly);
+           /// Debug.Log(fuel);
         }
         else if (PositiononOrbit == true)
         {
@@ -184,22 +198,28 @@ using System;
 
     public void fuelÑonsumption()
     {
-        fuel -= thrust * 0.003f;
-        module.mass -= fuel * 0.0005f;
+      
+            fuel = fuel - thrust * 2f;
+            massOfModule -= fuel * 0.0005f;
+        
     }
 
     public void Segregation()
     {
         //do something animation for main module
+        //module.AddForce( new Vector2(-1f,0f));
+        //Debug.Log("dddd");
     }
 
     public void LifeModule()
     {
+        
         fuelÑonsumption();
         checkForSegregation();
         if (canFly == false)
         {
             Segregation();
+           
         }
 
     }
@@ -244,9 +264,9 @@ using System;
     public float fuel;
     public float massOfModule;
     public bool mainModule;
-    public bool canFly;
-    private float thrust;
-    private bool PositiononOrbit;
+    public bool canFly=true;
+    public float thrust;
+    public bool PositiononOrbit=false;
 
     public MainRocketModule(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _canFly, bool _PositiononOrbit)
     {
@@ -256,6 +276,7 @@ using System;
         massOfModule = _massOfModule;
         canFly = _canFly;
         PositiononOrbit = _PositiononOrbit;
+        SetModuleBehavior(new MainModuleBehavior(module, fuel, thrust, massOfModule, canFly, PositiononOrbit));
     }
 
     public MainRocketModule ShallowCopy()
@@ -264,11 +285,9 @@ using System;
     }
     public void ModuleLife()
     {
-        SetModuleBehavior(new MainModuleBehavior(module,fuel,thrust,massOfModule, canFly, PositiononOrbit));
-        checkForSegregation();
         fuelÑonsumption();
-        Segregation();
         LifeModule();
+        Debug.Log(fuel);
     }
 }
 
@@ -277,10 +296,9 @@ using System;
     public Rigidbody2D module;
     public float fuel;
     public float massOfModule;
-    public bool mainModule;
-    public bool isNeed;
+    public bool isNeed=true;
     private float thrust;
-    private bool PositiononOrbit;
+    private bool PositiononOrbit=false;
 
     public SimpleRocketModule(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _isNeed, bool _PositiononOrbit)
     {
@@ -306,7 +324,7 @@ using System;
     }
 }
 
-    public class RocketModule : RocketObj
+  /*  public class RocketModule : RocketObj
     {
         public Rigidbody2D module;
         public float fuel;
@@ -368,3 +386,4 @@ using System;
 
     }
 
+*/
