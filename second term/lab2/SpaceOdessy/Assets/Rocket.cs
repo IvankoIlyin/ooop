@@ -6,25 +6,26 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
-    public float radius = 75f; // радиус
-                               //  RocketObj raketa = new RocketObj();
+    public static Rocket instanse;
+    public bool starting = false;
+    public float radius = 750f; // радиус
     RocketObj raketa;
-    
+    public GameObject simpleModuleOne, simpleModuleTwo;
 
-
+     public void startSimulation(float _thrust, float _boost, float _fuelMainModule, float _fuelSimpleModules)
+    {
+        raketa.thrust = _thrust;
+        raketa.boost = _boost;
+        raketa.construct(raketa.thrust, _fuelMainModule, _fuelSimpleModules);
+    }
 
     void Awake()
     {
-
+        instanse = this;
         raketa = gameObject.AddComponent<RocketObj>();
-
         raketa.raketa= gameObject.GetComponent<Rigidbody2D>() as Rigidbody2D;
-
-        raketa.thrust = 4f;
-        raketa.boost = 0.4f;
-        raketa.construct(raketa.thrust);
-
-
+        simpleModuleOne = GameObject.Find("simpleModuleOne");
+        simpleModuleTwo = GameObject.Find("simpleModuleTwo");
     }
 
     void Start()
@@ -34,8 +35,15 @@ public class Rocket : MonoBehaviour
 
     void FixedUpdate()
     {
-        raketa.move(radius);
-       
+        if (starting == true)
+        {
+            raketa.move(radius);
+            //if (raketa.simpleModuleTwo.isNeed == false) { Destroy(simpleModuleTwo); }
+           // if (raketa.simpleModuleOne.isNeed == false) { Destroy(simpleModuleOne); }
+           
+        }
+
+        
 
     }
 

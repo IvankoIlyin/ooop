@@ -8,15 +8,21 @@ using System;
 
     {
         public MainRocketModule mainModule;
+        public SimpleRocketModule simpleModuleOne, simpleModuleTwo;
         public Rigidbody2D raketa;
         public float thrust;
-         public float boost;
+        public float boost;
         public float angle = 0;
         public bool PositiononOrbit = false;
         
-        public void construct( float _thrust)
+        public void construct( float _thrust, float _fuelMainModule, float _fuelSimpleModules)
     {
-        mainModule = new MainRocketModule(raketa, 15f,_thrust , 1f, true, PositiononOrbit);
+        mainModule = new MainRocketModule(raketa, _fuelMainModule, _thrust , 1f, true, PositiononOrbit,0);
+        simpleModuleOne = new SimpleRocketModule(raketa, _fuelSimpleModules, _thrust, 1f, true, PositiononOrbit, 1);
+        simpleModuleTwo = simpleModuleOne.ShallowCopy();
+        simpleModuleTwo.order = 2;
+        simpleModuleTwo.fuel = _fuelSimpleModules;
+
     }
         private void intoOrbit()
         {
@@ -31,7 +37,7 @@ using System;
         {
         if (mainModule.canFly == true)
         {
-            raketa.rotation += 1f;
+            raketa.rotation += 0.3f;
             float angel = raketa.rotation * Mathf.Deg2Rad;
             raketa.AddForce(new Vector2(-thrust * Mathf.Sin(angel), thrust * Mathf.Cos(angel)), ForceMode2D.Force);
         }
@@ -50,28 +56,54 @@ using System;
 
         }
 
+        private void modulesLife()
+    {
+        raketa.mass = mainModule.massOfModule+simpleModuleOne.massOfModule+simpleModuleTwo.massOfModule;
+        mainModule.PositiononOrbit = PositiononOrbit;
+        simpleModuleOne.PositiononOrbit = PositiononOrbit;
+        simpleModuleTwo.PositiononOrbit = PositiononOrbit;
+        mainModule.thrust = thrust;
+        simpleModuleOne.thrust = thrust;
+        simpleModuleTwo.thrust = thrust;
+        if (simpleModuleTwo.isNeed == true)
+        {
+            simpleModuleTwo.ModuleLife();
+            Debug.Log("two"+" "+ simpleModuleTwo.fuel);
+        }
 
+        if (simpleModuleTwo.isNeed==false && simpleModuleOne.isNeed == true)
+        {
+            simpleModuleOne.ModuleLife();
+            Debug.Log("one" + " " + simpleModuleOne.fuel);
+
+        }
+
+        if (simpleModuleOne.isNeed == false && mainModule.canFly==true)
+        {
+            mainModule.ModuleLife();
+            Debug.Log("main" + " " + mainModule.fuel);
+        }
+
+    }
         public void move(float radius)
         {
 
             float currentRadius = Mathf.Sqrt((raketa.position.x * raketa.position.x) + (raketa.position.y * raketa.position.y));
-            mainModule.ModuleLife();
-             raketa.mass = mainModule.massOfModule;
-        mainModule.PositiononOrbit = PositiononOrbit;
-        mainModule.thrust = thrust;
+            modulesLife();
         
-        if (mainModule.canFly == false)
+            if (mainModule.canFly == false)
         {
             thrust = 0f;
             boost = 0f;
         }
-        if (currentRadius <= radius / 2f && PositiononOrbit == false)
+
+            if (currentRadius <= radius / 2f && PositiononOrbit == false)
             {
                 intoOrbit();
             }
 
 
-            if (currentRadius >= radius / 2f && currentRadius <= radius && PositiononOrbit == false)
+            if (currentRadius >= radius / 2.5f && currentRadius <= radius && PositiononOrbit == false)
             {
                 toOrbit();
 
@@ -99,8 +131,8 @@ using System;
     bool checkForSegregation(float fuel, bool canFly, bool PositiononOrbit);
     float fuel—onsumption(float fuel, float thrust);
     float mass—onsumption(float fuel, float thrust, float massOfModule);
-    void Segregation();
-    void LifeModule(float fuel,bool canFly, bool PositiononOrbit);
+    void Segregation(int order);
+    void LifeModule(float fuel,bool canFly, bool PositiononOrbit, int order);
 }
 
     public class SimpleModuleBehavior: ModuleBehavior
@@ -118,11 +150,11 @@ using System;
   
     public bool checkForSegregation(float fuel, bool isNeed, bool PositiononOrbit)
     {
-        if (fuel == 0 || PositiononOrbit == true)
+        if (fuel <= 0 || PositiononOrbit == true)
         {
             isNeed = false;
         }
-        else if (fuel != 0 && PositiononOrbit == false)
+        else if (fuel >= 0 && PositiononOrbit == false)
         {
             isNeed = true;
         }
@@ -134,7 +166,7 @@ using System;
     {
         if (fuel >= 0)
         {
-            massOfModule -= fuel * 0.0005f;
+            massOfModule -= fuel * 0.001f;
         }
         return massOfModule;
     }
@@ -144,23 +176,23 @@ using System;
 
         if (fuel >= 0)
         {
-            fuel = fuel - thrust * 0.05f;
+            fuel = fuel - thrust * 0.0004f;
         }
         return fuel;
 
     }
-    public void Segregation()
+    public void Segregation(int order)
     {
-       //do something animation for simple module
+      //  Debug.Log("module number " + order + " makes BOOOOM");
     }
 
-    public void LifeModule(float fuel, bool isNeed, bool PositiononOrbit)
+    public void LifeModule(float fuel, bool isNeed, bool PositiononOrbit, int order)
     {
         
         checkForSegregation( fuel,  isNeed,  PositiononOrbit);
         if (isNeed == false)
         {
-            Segregation();
+            Segregation(order);
         }
 
     }
@@ -197,7 +229,7 @@ using System;
     {
         if (fuel >= 0)
         {
-            fuel = fuel - thrust * 0.0005f;
+            fuel = fuel - thrust * 0.0004f;
         }
         return fuel;
         
@@ -207,25 +239,23 @@ using System;
     {
         if (fuel >= 0)
         {
-            massOfModule -= fuel * 0.0005f;
+            massOfModule -= fuel * 0.01f;
         }
         return massOfModule;
     }
 
-    public void Segregation()
+    public void Segregation(int order)
     {
-        //do something animation for main module
-        //module.AddForce( new Vector2(-1f,0f));
-        Debug.Log("dddd");
+       // Debug.Log("module number " + order + " makes BOOOOM");
     }
 
-    public void LifeModule(float fuel, bool canFly, bool PositiononOrbit)
+    public void LifeModule(float fuel, bool canFly, bool PositiononOrbit, int order)
     {
         
         checkForSegregation( fuel,  canFly,  PositiononOrbit);
         if (canFly == false)
         {
-            Segregation();
+            Segregation(order);
            
         }
 
@@ -262,14 +292,14 @@ using System;
         return massOfModule;
     }
 
-    protected void Segregation()
+    protected void Segregation(int order)
     {
-        moduleBehavior.Segregation();
+        moduleBehavior.Segregation(order);
     }
 
-    protected void LifeModule(float fuel, float thrust, float massOfModule, bool canFly, bool PositiononOrbit)
+    protected void LifeModule(float fuel, float thrust, float massOfModule, bool canFly, bool PositiononOrbit, int order)
     {
-        moduleBehavior.LifeModule( fuel, canFly,  PositiononOrbit);
+        moduleBehavior.LifeModule( fuel, canFly,  PositiononOrbit, order);
     }
 
 }
@@ -286,8 +316,9 @@ using System;
     public bool canFly = true;
     public float thrust;
     public bool PositiononOrbit;
+    public int order;
 
-    public MainRocketModule(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _canFly, bool _PositiononOrbit)
+    public MainRocketModule(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _canFly, bool _PositiononOrbit,int _order)
     {
         module = _module;
         fuel = _fuel;
@@ -295,6 +326,7 @@ using System;
         massOfModule = _massOfModule+_fuel;
         canFly = _canFly;
         PositiononOrbit = _PositiononOrbit;
+        order = _order;
         SetModuleBehavior(new MainModuleBehavior(module, _fuel, thrust, massOfModule, canFly, PositiononOrbit));
     }
 
@@ -304,11 +336,10 @@ using System;
     }
     public void ModuleLife()
     {
-        LifeModule(fuel, thrust, massOfModule, canFly, PositiononOrbit);
+        LifeModule(fuel, thrust, massOfModule, canFly, PositiononOrbit,order);
         fuel =fuel—onsumption(fuel,thrust);
         canFly = checkForSegregation(fuel, canFly, PositiononOrbit);
         massOfModule = mass—onsumption(fuel, thrust, massOfModule);
-        Debug.Log(fuel);
         
     }
 }
@@ -319,17 +350,19 @@ using System;
     public float fuel;
     public float massOfModule;
     public bool isNeed=true;
-    private float thrust;
-    private bool PositiononOrbit=false;
+    public float thrust;
+    public int order;
+    public bool PositiononOrbit=false;
 
-    public SimpleRocketModule(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _isNeed, bool _PositiononOrbit)
+    public SimpleRocketModule(Rigidbody2D _module, float _fuel, float _thrust, float _massOfModule, bool _isNeed, bool _PositiononOrbit, int _order)
     {
         module = _module;
         fuel = _fuel;
         thrust = _thrust;
-        massOfModule = _massOfModule;
+        massOfModule = _massOfModule+_fuel;
         isNeed = _isNeed;
         PositiononOrbit = _PositiononOrbit;
+        order = _order;
         SetModuleBehavior(new SimpleModuleBehavior(module, fuel, thrust, massOfModule, isNeed, PositiononOrbit));
     }
 
@@ -340,11 +373,10 @@ using System;
     public void ModuleLife()
     {
        
-        checkForSegregation(fuel, isNeed, PositiononOrbit);
-        fuel—onsumption(fuel,thrust);
-        //Debug.Log(fuel);    
-        Segregation();
-        LifeModule(fuel,thrust,massOfModule,isNeed,PositiononOrbit);
+       isNeed= checkForSegregation(fuel, isNeed, PositiononOrbit);
+       fuel =   fuel—onsumption(fuel,thrust);
+        massOfModule = mass—onsumption(fuel, thrust, massOfModule);
+        LifeModule(fuel,thrust,massOfModule,isNeed,PositiononOrbit, order);
         
     }
 }
